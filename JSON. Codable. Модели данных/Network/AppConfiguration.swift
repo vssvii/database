@@ -15,3 +15,5 @@ enum AppConfiguration {
     case planets (urlString: String)
 
 }
+
+let networkError = NetworkError.default
