@@ -64,5 +64,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           print("Error signing out: %@", signOutError)
         }
     }
+    
+    func sceneDidDisconnect(_ scene: UIScene) {
+        do {
+            try Auth.auth().signOut()
+        } catch {
+          print("Sign out error")
+        }
+    }
 }
 
