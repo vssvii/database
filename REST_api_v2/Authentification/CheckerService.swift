@@ -18,17 +18,25 @@ protocol CheckerServiceProtocol {
     func signUp(with email: String, password: String, completion: @escaping (AuthDataResult?, NSError?) -> Void)
 }
 
-class CheckerService: CheckerServiceProtocol {
+class CheckerService: UIViewController, CheckerServiceProtocol {
     
     static let shared = CheckerService()
     
-    private init() {}
+    private init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     func checkCredentials(email: String, password: String, completion: @escaping (AuthDataResult?, NSError?) -> Void) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
             if let error = error as? NSError {
                 print("Error: \(error.localizedDescription)")
             } else {
+                let logInProfile = ProfileViewController(userService: CurrentUserService(name: email, avatar: "", status: "") as UserService, userName: email)
+                self.navigationController?.pushViewController(logInProfile, animated: true)
                 print("User signs in successfully")
                 let userInfo = Auth.auth().currentUser
                 let email = userInfo?.email
@@ -51,43 +59,3 @@ class CheckerService: CheckerServiceProtocol {
          }
     }
 }
-
-
-//enum SignMethod {
-//    case checkCredentials
-//    case signUp
-//}
-//
-//final class CheckerService {
-//
-//    static let shared = CheckerService()
-//
-//    private init() {}
-//
-//    var completion: ((_ message: String) -> Void)?
-//
-//
-//    public func checkUser (SignMethod: SignMethod, login: String, password: String) {
-//
-//            switch SignMethod {
-//            case .checkCredentials:
-//                Auth.auth().signIn(withEmail: login, password: password) { [weak self] authResult, error in
-//                    guard let strongSelf = self else { return }
-//                    if let error = error {
-//                        if let completion = strongSelf.completion {
-//                            completion (error.localizedDescription)
-//                        }
-//                    }
-//                }
-//            case .signUp:
-//                Auth.auth().createUser(withEmail: login, password: password) { [weak self] authResult, error in
-//                    guard let strongSelf = self else { return }
-//                    if let error = error {
-//                        if let completion = strongSelf.completion {
-//                            completion (error.localizedDescription)
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//}

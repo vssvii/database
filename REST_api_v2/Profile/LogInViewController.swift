@@ -199,15 +199,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         ])
         
     }
-    
-//    @objc private func loginButtonTapped() {
-//    // Валидация полей логина и пароля.
-//        self.delegate?.checkCredentials(email: email, password: password) {
-//
-//    } }
-//    @objc private func signUpButtonTapped() {
-//        // Валидация полей логина и пароля.
-//        self.delegate.signUp(with: email, password: password) {
 
     
     override func viewDidLoad() {
@@ -220,6 +211,10 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         setupLayout()
 
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+        }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -238,22 +233,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             name: UIResponder.keyboardWillHideNotification,
             object: nil
         )
-        
-//        Auth.auth().addStateDidChangeListener { [self] auth, user in
-//            handle = Auth.auth().addStateDidChangeListener { auth, user in
-//                if (user != nil) {
-//                        #if DEBUG
-//                        let logInProfile = ProfileViewController(userService: CurrentUserService(name: login.text!, avatar: "", status: "") as UserService, userName: login.text!)
-//                        navigationController?.pushViewController(logInProfile, animated: true)
-//                        #else
-//                        let logInProfile = ProfileViewController(userService: TestUserService(name: login.text!, avatar: "", status: "") as UserService, userName: login.text!)
-//                        navigationController?.pushViewController(logInProfile, animated: true)
-//                        #endif
-//                } else {
-//                    print("Пользователь не найден!")
-//                }
-//            }
-//        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

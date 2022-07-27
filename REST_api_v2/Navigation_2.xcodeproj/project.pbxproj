@@ -100,6 +100,7 @@
 		4BBFBCDB2886AA9B0067C74D /* CheckerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBFBCDA2886AA9B0067C74D /* CheckerService.swift */; };
 		4BBFBCDC2886AA9B0067C74D /* CheckerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBFBCDA2886AA9B0067C74D /* CheckerService.swift */; };
 		4BBFBCDD2886AA9B0067C74D /* CheckerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BBFBCDA2886AA9B0067C74D /* CheckerService.swift */; };
+		4BBFBCE3289112030067C74D /* iOSIntPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 4BBFBCE2289112030067C74D /* iOSIntPackage */; };
 		4BC47278288033EE00C89D0B /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC47277288033EE00C89D0B /* Users.swift */; };
 		4BC4727A2880375900C89D0B /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC472792880375900C89D0B /* NetworkError.swift */; };
 		4BC4727B2880406F00C89D0B /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC472792880375900C89D0B /* NetworkError.swift */; };
@@ -226,6 +227,7 @@
 				4B8DF81F2869988C002464D3 /* iOSIntPackage in Frameworks */,
 				4B8DF81528697C07002464D3 /* Pods_Navigation_2.framework in Frameworks */,
 				4B497B7F280304D900AD19B6 /* StorageService.framework in Frameworks */,
+				4BBFBCE3289112030067C74D /* iOSIntPackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,6 +446,7 @@
 			name = Navigation_2;
 			packageProductDependencies = (
 				4B8DF81E2869988C002464D3 /* iOSIntPackage */,
+				4BBFBCE2289112030067C74D /* iOSIntPackage */,
 			);
 			productName = Navigation_2;
 			productReference = 4B02DA4E2778C52300023AF4 /* Navigation_2.app */;
@@ -522,6 +525,7 @@
 			packageReferences = (
 				4B8DF81D2869988C002464D3 /* XCRemoteSwiftPackageReference "iOSIntPackage" */,
 				4B8DF820286999CE002464D3 /* XCRemoteSwiftPackageReference "iOSIntPackage" */,
+				4BBFBCE1289112030067C74D /* XCRemoteSwiftPackageReference "iOSIntPackage" */,
 			);
 			productRefGroup = 4B02DA4F2778C52300023AF4 /* Products */;
 			projectDirPath = "";
@@ -1203,6 +1207,14 @@
 				kind = branch;
 			};
 		};
+		4BBFBCE1289112030067C74D /* XCRemoteSwiftPackageReference "iOSIntPackage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TrueMax/iOSIntPackage.git";
+			requirement = {
+				branch = imagepublisher;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1212,6 +1224,11 @@
 			productName = iOSIntPackage;
 		};
 		4B8DF821286999CE002464D3 /* iOSIntPackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4B8DF81D2869988C002464D3 /* XCRemoteSwiftPackageReference "iOSIntPackage" */;
+			productName = iOSIntPackage;
+		};
+		4BBFBCE2289112030067C74D /* iOSIntPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4B8DF81D2869988C002464D3 /* XCRemoteSwiftPackageReference "iOSIntPackage" */;
 			productName = iOSIntPackage;

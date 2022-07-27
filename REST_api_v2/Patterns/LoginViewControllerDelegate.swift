@@ -18,7 +18,7 @@ protocol LoginViewControllerDelegate {
 
 }
 
-final class LoginInspector: LoginViewControllerDelegate {
+final class LoginInspector: UIViewController, LoginViewControllerDelegate {
     
     
     func signUp (login: String, password: String, completion: @escaping (AuthDataResult?, NSError?) -> Void) {
@@ -28,6 +28,7 @@ final class LoginInspector: LoginViewControllerDelegate {
                 print("Error: \(error.localizedDescription)")
             } else {
                 print("User signs up successfully")
+                
             }
         }
     }
@@ -38,6 +39,8 @@ final class LoginInspector: LoginViewControllerDelegate {
             if let error = error as? NSError {
                 print("Error: \(error.localizedDescription)")
             } else {
+                let logInProfile = ProfileViewController(userService: CurrentUserService(name: login, avatar: "", status: "") as UserService, userName: login)
+                self.navigationController?.pushViewController(logInProfile, animated: true)
                 print("User signs in successfully")
             }
         }
