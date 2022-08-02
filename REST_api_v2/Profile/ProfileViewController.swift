@@ -9,6 +9,8 @@ import UIKit
 import iOSIntPackage
 import SnapKit
 import Foundation
+import Firebase
+import FirebaseAuth
 
 var factory = MyLoginFactory().getLoginInspector()
 
@@ -18,6 +20,8 @@ class ProfileViewController: UIViewController {
     let userService: UserService?
     
     var userLogIn = LogInViewController(with: factory).login.text
+    
+    var logInViewController = LogInViewController(with: factory)
     
     init(userService: UserService, userName: String) {
         self.userService = userService

@@ -15,6 +15,9 @@
 		4B02DA5B2778C52500023AF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4B02DA5A2778C52500023AF4 /* Assets.xcassets */; };
 		4B02DA5E2778C52500023AF4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4B02DA5C2778C52500023AF4 /* LaunchScreen.storyboard */; };
 		4B02DA6A2778CB7900023AF4 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B02DA692778CB7900023AF4 /* ProfileViewController.swift */; };
+		4B1163BE289842C000CD2145 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1163BD289842C000CD2145 /* Utilities.swift */; };
+		4B1163BF28984AD400CD2145 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1163BD289842C000CD2145 /* Utilities.swift */; };
+		4B1163C028984AD500CD2145 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1163BD289842C000CD2145 /* Utilities.swift */; };
 		4B1CA6D22837EC9400FED58C /* Checker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1CA6D12837EC9400FED58C /* Checker.swift */; };
 		4B1CA6D32837EC9400FED58C /* Checker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1CA6D12837EC9400FED58C /* Checker.swift */; };
 		4B1CA6D42837EC9400FED58C /* Checker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1CA6D12837EC9400FED58C /* Checker.swift */; };
@@ -186,6 +189,7 @@
 		4B02DA652778C5DA00023AF4 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		4B02DA672778C5FF00023AF4 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		4B02DA692778CB7900023AF4 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		4B1163BD289842C000CD2145 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		4B1CA6D12837EC9400FED58C /* Checker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checker.swift; sourceTree = "<group>"; };
 		4B1CA6D62837F34400FED58C /* LoginViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewControllerDelegate.swift; sourceTree = "<group>"; };
 		4B1CA6DC2839712500FED58C /* LoginFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFactory.swift; sourceTree = "<group>"; };
@@ -257,6 +261,7 @@
 		4B02DA452778C52300023AF4 = {
 			isa = PBXGroup;
 			children = (
+				4B1163BC289842AB00CD2145 /* Utilities */,
 				4BBFBCD92886AA3E0067C74D /* Authentification */,
 				4BC472762880339800C89D0B /* Models_JSON */,
 				4B381B462873FC240089FBC2 /* Network */,
@@ -300,6 +305,14 @@
 				4BC7639F28867F7E0044E0C6 /* GoogleService-Info.plist */,
 			);
 			path = Navigation_2;
+			sourceTree = "<group>";
+		};
+		4B1163BC289842AB00CD2145 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				4B1163BD289842C000CD2145 /* Utilities.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 		4B1CA6D52837F2F900FED58C /* Patterns */ = {
@@ -684,6 +697,7 @@
 			files = (
 				4B500F0728578012007CCD21 /* Photo.swift in Sources */,
 				4BC4728828812DF200C89D0B /* Planets.swift in Sources */,
+				4B1163BE289842C000CD2145 /* Utilities.swift in Sources */,
 				4B500F1728578109007CCD21 /* PhotosCollectionViewCell.swift in Sources */,
 				4B02DA6A2778CB7900023AF4 /* ProfileViewController.swift in Sources */,
 				4B90B4C327C0189000AAB539 /* LogInViewController.swift in Sources */,
@@ -734,6 +748,7 @@
 				4B497B892803051100AD19B6 /* ViewController.swift in Sources */,
 				4BC4728928812DF200C89D0B /* Planets.swift in Sources */,
 				4B497B9C28030A4800AD19B6 /* PostTableViewCell.swift in Sources */,
+				4B1163BF28984AD400CD2145 /* Utilities.swift in Sources */,
 				4B500F0828578012007CCD21 /* Photo.swift in Sources */,
 				4B339CE5282ADD94005686B6 /* UserService.swift in Sources */,
 				4B500F1528578109007CCD21 /* PhotosTableViewCell.swift in Sources */,
@@ -754,6 +769,7 @@
 			files = (
 				4B500F0928578012007CCD21 /* Photo.swift in Sources */,
 				4BC4728A28812DF200C89D0B /* Planets.swift in Sources */,
+				4B1163C028984AD500CD2145 /* Utilities.swift in Sources */,
 				4B500F1928578109007CCD21 /* PhotosCollectionViewCell.swift in Sources */,
 				4BC4727C2880406F00C89D0B /* NetworkError.swift in Sources */,
 				4B5CD5BB280DD3C700E105B2 /* ProfileViewController.swift in Sources */,

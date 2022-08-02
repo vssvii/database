@@ -123,32 +123,104 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return changeButton
     }()
     
+    private lazy var errorLabel: UILabel = {
+        let errorLabel = UILabel()
+        errorLabel.textColor = .red
+        errorLabel.font = .systemFont(ofSize: 20)
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        errorLabel.numberOfLines = 10
+        return errorLabel
+    }()
+    
     @objc func signInButtonPressed() {
-        
-        self.delegate?.checkCredentials(login: login.text!, password: pass.text!) { [self] result, error in
-            if let error = error as? NSError {
-                print("Error: \(error.localizedDescription)")
-            } else {
+            
+            let email = login.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+            let password = pass.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            
+            self.delegate?.checkCredentials(login: login.text!, password: pass.text!) { [weak self] result, error in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                guard error == nil else {
+                    self?.errorLabel.text = error!.localizedDescription
+                    self?.errorLabel.alpha = 1
+                    return
+                }
+                
                 #if DEBUG
-                let logInProfile = ProfileViewController(userService: CurrentUserService(name: login.text!, avatar: "", status: "") as UserService, userName: login.text!)
-                navigationController?.pushViewController(logInProfile, animated: true)
+                let logInProfile = ProfileViewController(userService: CurrentUserService(name: strongSelf.login.text!, avatar: "", status: "") as UserService, userName: strongSelf.login.text!)
+                strongSelf.navigationController?.pushViewController(logInProfile, animated: true)
                 #else
-                let logInProfile = ProfileViewController(userService: TestUserService(name: login.text!, avatar: "", status: "") as UserService, userName: login.text!)
-                navigationController?.pushViewController(logInProfile, animated: true)
+                let logInProfile = ProfileViewController(userService: TestUserService(name: strongSelf.login.text!, avatar: "", status: "") as UserService, userName: strongSelf.login.text!)
+                strongSelf.navigationController?.pushViewController(logInProfile, animated: true)
                 #endif
+                
+                strongSelf.checkUserInfo()
             }
-        }
     }
     
     @objc func signUpButtonPressed() {
         
-        self.delegate?.signUp(login: login.text!, password: pass.text!) { result, error in
-            if let error = error as? NSError {
-                print("Error: \(error.localizedDescription)")
-            } else {
-                print("User signs up successfully")
+        let error = validateFields()
+        
+        if error != nil {
+            
+            showError(error!)
+        } else {
+            
+            
+            let checkedLogin = login.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            let checkedPassword = pass.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            self.delegate?.signUp(login: login.text!, password: pass.text!) { result, error in
+                
+                if error != nil {
+                    self.showError("Error: \(String(describing: error?.localizedDescription))")
+                } else {
+                    let newUserInfo = Auth.auth().currentUser
+                    let email = newUserInfo?.email
+                    self.errorLabel.text = "Регистрация прошла успешна!"
+                    self.errorLabel.alpha = 1
+                    self.errorLabel.textColor = .blue
+                }
             }
         }
+    }
+    
+    private func checkUserInfo() {
+        if Auth.auth().currentUser != nil {
+            print(Auth.auth().currentUser?.uid)
+        }
+    }
+    
+    private func validateFields() -> String? {
+        
+        if login.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+            
+            return "Необходимо заполнить поля"
+        }
+        
+        let cleanedPassword = pass.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        if Utilities.isPasswordValid(cleanedPassword) == false {
+            return "Пароль должен содержать не менее 8 букв, специальные символы и числа."
+        }
+        
+        return nil
+    }
+    
+    private func setupElements() {
+        
+        errorLabel.alpha = 0
+    }
+    
+    private func showError(_ message: String) {
+        
+        errorLabel.text = message
+        errorLabel.alpha = 1
     }
     
     
@@ -161,6 +233,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         scrollView.addSubview(pass)
         scrollView.addSubview(signInButton)
         scrollView.addSubview(signUpButton)
+        scrollView.addSubview(errorLabel)
         
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -195,7 +268,12 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
             signUpButton.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 16.0),
             signUpButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
             signUpButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0),
-            signUpButton.heightAnchor.constraint(equalToConstant: 50)
+            signUpButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            errorLabel.topAnchor.constraint(equalTo: signUpButton.bottomAnchor, constant: 16.0),
+            errorLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            errorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
+            errorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0)
         ])
         
     }
@@ -209,7 +287,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         self.navigationController?.navigationBar.isHidden = true
         
         setupLayout()
-
+        
+        setupElements()
+            
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -240,8 +320,6 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         let notificationCenter = NotificationCenter.default
         notificationCenter.removeObserver(self)
-        
-        Auth.auth().removeStateDidChangeListener(handle!)
     }
     
     func update(title: String) {

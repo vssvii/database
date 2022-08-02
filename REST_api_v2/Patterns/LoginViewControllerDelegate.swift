@@ -24,25 +24,18 @@ final class LoginInspector: UIViewController, LoginViewControllerDelegate {
     func signUp (login: String, password: String, completion: @escaping (AuthDataResult?, NSError?) -> Void) {
         
         CheckerService.shared.signUp(with: login, password: password) { result, error in
-            if let error = error as? NSError {
-                print("Error: \(error.localizedDescription)")
-            } else {
-                print("User signs up successfully")
-                
-            }
+            completion(result, error)
+//            guard error == nil else {
+//                print("Error: \(String(describing: error?.localizedDescription))")
+//                return
+//            }
         }
     }
     
     func checkCredentials (login: String, password: String, completion: @escaping (AuthDataResult?, NSError?) -> Void) {
         
         CheckerService.shared.checkCredentials(email: login, password: password) { result, error in
-            if let error = error as? NSError {
-                print("Error: \(error.localizedDescription)")
-            } else {
-                let logInProfile = ProfileViewController(userService: CurrentUserService(name: login, avatar: "", status: "") as UserService, userName: login)
-                self.navigationController?.pushViewController(logInProfile, animated: true)
-                print("User signs in successfully")
-            }
+            completion(result, error)
         }
     
     }

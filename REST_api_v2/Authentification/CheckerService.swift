@@ -31,16 +31,23 @@ class CheckerService: UIViewController, CheckerServiceProtocol {
     }
     
     func checkCredentials(email: String, password: String, completion: @escaping (AuthDataResult?, NSError?) -> Void) {
-        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
-            if let error = error as? NSError {
-                print("Error: \(error.localizedDescription)")
-            } else {
-                let logInProfile = ProfileViewController(userService: CurrentUserService(name: email, avatar: "", status: "") as UserService, userName: email)
-                self.navigationController?.pushViewController(logInProfile, animated: true)
-                print("User signs in successfully")
-                let userInfo = Auth.auth().currentUser
-                let email = userInfo?.email
-            }
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+            completion(authResult, error as NSError?)
+//            guard let strongSelf = self else {
+//                return
+//            }
+//
+//            guard error == nil else {
+//                print("Error: \(String(describing: error?.localizedDescription))")
+//                return
+//            }
+//            print("User signs in successfully")
+////            let logInProfile = ProfileViewController(userService: CurrentUserService(name: email, avatar: "", status: "") as UserService, userName: email)
+//            let feedView = FeedViewController()
+//            strongSelf.navigationController?.pushViewController(feedView, animated: true)
+//            let userInfo = Auth.auth().currentUser
+//            let email = userInfo?.email
+            
         }
     }
     
@@ -48,14 +55,26 @@ class CheckerService: UIViewController, CheckerServiceProtocol {
     
     func signUp(with email: String, password: String, completion: @escaping (AuthDataResult?, NSError?) -> Void) {
         
-        Auth.auth().createUser(withEmail: email, password: password) { createResult, error in
-            if let error = error as? NSError {
-                print("Error: \(error.localizedDescription)")
-            } else {
-                print("User signs up successfully")
-                let newUserInfo = Auth.auth().currentUser
-                let email = newUserInfo?.email
-            }
-         }
+        Auth.auth().createUser(withEmail: email, password: password) { [self] createResult, error in
+            completion(createResult, error as NSError?)
+            
+//            if error != nil {
+////            if let error = error as? NSError {
+//                print("Error: \(String(describing: error?.localizedDescription))")
+//            } else {
+//                print("User signs up successfully")
+//                let newUserInfo = Auth.auth().currentUser
+//                let email = newUserInfo?.email
+//            }
+        }
     }
+    
+//    func checkUserInfo() {
+//        if Auth.auth().currentUser != nil {
+//            print(Auth.auth().currentUser?.uid as Any)
+//            let logInProfile = ProfileViewController(userService: CurrentUserService(name: "", avatar: "", status: "") as UserService, userName: "")
+//            navigationController?.pushViewController(logInProfile, animated: true)
+//        }
+//    }
+    
 }

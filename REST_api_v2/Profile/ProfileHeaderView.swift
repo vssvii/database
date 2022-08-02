@@ -7,6 +7,11 @@
 
 import UIKit
 import SnapKit
+import Firebase
+import FirebaseAuth
+
+
+var logInViewController = LogInViewController(with: factory)
 
 class ProfileHeaderView: UIView {
     
@@ -69,7 +74,7 @@ class ProfileHeaderView: UIView {
         return statusTextField
     }()
     
-    private var closeButton: UIButton = {
+    public var closeButton: UIButton = {
         let closeButton = UIButton()
         closeButton.setTitle("Закрыть", for: .normal)
         closeButton.backgroundColor = .systemRed

@@ -14,6 +14,7 @@ import FirebaseAuth
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
+    
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -49,28 +50,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             loginController.delegate = loginInspector
             }
         
+        
         FirebaseApp.configure()
         return true
     }
     
+    
+    
     func applicationDidFinishLaunching(_ application: UIApplication) {
         
         let appConfiguration: AppConfiguration = .planets(urlString: "https://swapi.dev/api/planets/5")
-        
-        let firebaseAuth = Auth.auth()
-        do {
-          try firebaseAuth.signOut()
-        } catch let signOutError as NSError {
-          print("Error signing out: %@", signOutError)
-        }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
-        do {
-            try Auth.auth().signOut()
-        } catch {
-          print("Sign out error")
-        }
+        
+        
+        let profileViewHeader = ProfileHeaderView()
+        profileViewHeader.closeButton.addAction(UIAction.init(handler: { action in
+            let firebaseAuth = Auth.auth()
+            do {
+                try firebaseAuth.signOut()
+                let logInNavigationController = UINavigationController(rootViewController: logInViewController)
+                let navigationController = (self.window?.rootViewController ?? logInNavigationController) as UIViewController
+                navigationController.navigationController?.pushViewController(logInViewController, animated: true)
+            }
+            catch let signOutError as NSError {
+                print("Error signing out: %@", signOutError)
+            }
+        }), for: .touchUpInside)
     }
 }
 
