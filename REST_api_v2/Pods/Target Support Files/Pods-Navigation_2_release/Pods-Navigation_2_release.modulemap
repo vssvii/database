@@ -1,0 +1,6 @@
+framework module Pods_Navigation_2_release {
+  umbrella header "Pods-Navigation_2_release-umbrella.h"
+
+  export *
+  module * { export * }
+}
