@@ -13,13 +13,11 @@ class PostViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemMint
-        let feedView = FeedViewController()
-        self.title = feedView.post.title
         
         configureItems()
     }
     
-    func configureItems() {
+    private func configureItems() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.fill"), style: .done, target: self, action: #selector(barButtonAction))
     }
     

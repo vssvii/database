@@ -27,7 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let feedViewItem = UITabBarItem()
         feedViewItem.title = "Лента пользователя"
         feedViewItem.image = UIImage(systemName: "house.fill")
-        let feedView = FeedViewController()
+        let fileManagerService = FileManagerService()
+        let feedView = FeedViewController(fileManagerService: fileManagerService)
         feedView.title = "Лента пользователя"
         feedView.tabBarItem = feedViewItem
         let feedViewNavigationController = UINavigationController(rootViewController: feedView)
