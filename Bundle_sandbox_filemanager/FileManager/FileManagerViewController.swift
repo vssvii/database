@@ -208,10 +208,11 @@ extension FileManagerViewController: UITableViewDelegate, UITableViewDataSource 
         
         let viewController = FileManagerViewController(fileManagerService: fileManagerService, content: contentFiles)
         
+        navigationController?.pushViewController(viewController, animated: true)
+        
         fileManagerTableView.reloadData()
         
-        present(viewController, animated: true)
-        
+        self.save()
     }
     
 }
@@ -235,6 +236,8 @@ extension FileManagerViewController: UIImagePickerControllerDelegate, UINavigati
         contents.append(contentFile)
 
         fileManagerTableView.reloadData()
+        
+        self.save()
         
         dismiss(animated: true)
     }
