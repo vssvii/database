@@ -13,13 +13,12 @@ import CoreTelephony
 
 class FileManagerViewController: UIViewController {
     
-    var contents = [Content]()
     
-    var contentFolder = Content(type: .folder(url: URL(string: "")), name: "")
-    
-    var contentFile = Content(type: .file(url: URL(string: "")), name: "")
+    private lazy var contentsStore: ContentsStore = ContentsStore.shared
     
     var content: Content
+    
+    var contentFolder = Content(type: .folder(url: URL(string: "")), name: "")
     
     let fileManager = FileManager.default
     
@@ -77,11 +76,12 @@ class FileManagerViewController: UIViewController {
                 
                 try! fileManager.createDirectory(at: folderPath, withIntermediateDirectories: false, attributes: [:])
                 
-                contentFolder.name = text
+                let contentFolder = Content(type: .folder(url: URL(string: text)), name: text)
                     
-                contents.append(contentFolder)
+                contentsStore.contents.append(contentFolder)
                 
                 fileManagerTableView.reloadData()
+                
             }
         }
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel) { (_) in }
@@ -120,13 +120,7 @@ class FileManagerViewController: UIViewController {
         let paths = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
     }
-    
-    func save() {
-        if let savedData = try? NSKeyedArchiver.archivedData(withRootObject: contents, requiringSecureCoding: false) {
-            let defaults = UserDefaults.standard
-            defaults.set(savedData, forKey: "contents")
-        }
-    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -156,7 +150,7 @@ extension FileManagerViewController: UITableViewDelegate, UITableViewDataSource 
 
     func numberOfSections(in tableView: UITableView) -> Int {
     // #warning Incomplete implementation, return the number of sections
-    return 1
+        return 1
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -165,14 +159,14 @@ extension FileManagerViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     // #warning Incomplete implementation, return the number of rows
-        return contents.count
+        return contentsStore.contents.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CellReuseIdentifiers.files.rawValue, for: indexPath) as? FileManagerTableViewCell
         
-        let content = contents[indexPath.item]
+        let content = contentsStore.contents[indexPath.item]
         cell?.textLabel?.text = content.name
         
         let path = getDocumentsDirectory().appendingPathComponent(content.name)
@@ -186,33 +180,70 @@ extension FileManagerViewController: UITableViewDelegate, UITableViewDataSource 
         switch content.type {
         case .folder:
             cell!.accessoryType = .disclosureIndicator
-        case .file: break
+        case .file:
+            break
         }
         cell?.textLabel?.text = content.name
         return cell!
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)  {
         
-        self.fileManagerTableView.deselectRow(at: indexPath, animated: true)
+        var content = contentsStore.contents[indexPath.item]
         
-        let data = contents
+        switch content.type {
+        case .folder:
+                self.fileManagerTableView.deselectRow(at: indexPath, animated: true)
         
-        guard case Content.ContentType.folder = data[indexPath.row].type else {
-        return
+                let data = contentsStore.contents
+        
+                guard case Content.ContentType.folder = data[indexPath.row].type else {
+                return
+                }
+        
+                let fileManagerService = FileManagerService()
+            
+            
+            let content = Content(type: .folder(url: URL(string: contentFolder.name)), name: contentFolder.name)
+        
+                let viewController = FileManagerViewController(fileManagerService: fileManagerService, content: content)
+        
+                navigationController?.pushViewController(viewController, animated: true)
+        
+                fileManagerTableView.reloadData()
+        case .file:
+            let setANameAC = UIAlertController(title: "Поставить наименование", message: "Напишите наименование", preferredStyle: .alert)
+            setANameAC.addTextField()
+            setANameAC.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+            setANameAC.addAction(UIAlertAction(title: "Сохранить", style: .default) { [weak self, weak setANameAC] _ in
+                guard let newName = setANameAC?.textFields?[0].text else { return }
+                content.name = newName
+                
+                self?.fileManagerTableView.reloadData()
+            })
+            
+            let deleteAPersonAC = UIAlertController(title: "Удалить файл", message: "Вы уверены, что хотите удалить файл?", preferredStyle: .alert)
+            deleteAPersonAC.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+            deleteAPersonAC.addAction(UIAlertAction(title: "Удалить", style: .default) { UIAlertAction in
+                self.contentsStore.contents.remove(at: indexPath.item)
+                self.fileManagerTableView.reloadData()
+            })
+            
+            let alertController = UIAlertController(title: "Что вы хотите сделать?", message: nil, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Поставить наименование", style: .default) { UIAlertAction in
+                DispatchQueue.main.async {
+                    self.present(setANameAC, animated: true)
+                }
+            })
+            alertController.addAction(UIAlertAction(title: "Удалить файл", style: .default) { UIAlertAction in
+                DispatchQueue.main.async {
+                    self.present(deleteAPersonAC, animated: true)
+                }
+            })
+            alertController.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+            
+            present(alertController, animated: true)
         }
-        
-        let fileManagerService = FileManagerService()
-        
-        let contentFiles = contentFile
-        
-        let viewController = FileManagerViewController(fileManagerService: fileManagerService, content: contentFiles)
-        
-        navigationController?.pushViewController(viewController, animated: true)
-        
-        fileManagerTableView.reloadData()
-        
-        self.save()
     }
     
 }
@@ -221,7 +252,7 @@ extension FileManagerViewController: UIImagePickerControllerDelegate, UINavigati
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
-        guard let image = info[.editedImage] as? UIImage else { return }
+        guard let image = info[.originalImage] as? UIImage else { return }
         
         let imageName = "Фото"
         
@@ -231,13 +262,11 @@ extension FileManagerViewController: UIImagePickerControllerDelegate, UINavigati
             try? jpegData.write(to: imagePath)
         }
         
-        contentFile.name = imageName
+        let contentFile = Content(type: .file(url: URL(string: imageName)), name: imageName)
         
-        contents.append(contentFile)
-
+        contentsStore.contents.append(contentFile)
+        
         fileManagerTableView.reloadData()
-        
-        self.save()
         
         dismiss(animated: true)
     }
