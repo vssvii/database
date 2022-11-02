@@ -1,0 +1,12 @@
+# Uncomment the next line to define a global platform for your project
+# platform :ios, '9.0'
+
+target 'FileManager' do
+
+pod 'SnapKit', '~> 5.0.0'
+pod 'KeychainSwift', '~> 20.0'
+  use_frameworks!
+
+  # Pods for FileManager
+
+end
