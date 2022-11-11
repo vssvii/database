@@ -50,7 +50,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             loginController.delegate = loginInspector
             }
         
-        
         FirebaseApp.configure()
         return true
     }
