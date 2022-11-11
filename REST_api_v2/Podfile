@@ -10,6 +10,7 @@ target 'Navigation_2' do
 pod 'SnapKit'
 pod 'Firebase/Core'
 pod 'Firebase/Auth'
+pod 'RealmSwift', '~> 10.31'
 
 end
 
@@ -22,7 +23,6 @@ target 'Navigation_2_release' do
 pod 'SnapKit'
 pod 'Firebase/Core'
 pod 'Firebase/Auth'
-
 end
 
 target 'StorageService' do

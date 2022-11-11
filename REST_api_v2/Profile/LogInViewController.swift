@@ -9,10 +9,18 @@ import UIKit
 import FirebaseCore
 import Firebase
 import FirebaseAuth
+import RealmSwift
+import SnapKit
     
 
 
-class LogInViewController: UIViewController, UITextFieldDelegate {
+class LogInViewController: UIViewController {
+    
+    var isUserAuthorized: Bool = false
+    
+    let realm = try! Realm()
+    
+    typealias Callback = () -> Void
     
     public var delegate: LoginViewControllerDelegate?
     
@@ -77,7 +85,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         login.clearButtonMode = UITextField.ViewMode.whileEditing
         login.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
         login.placeholder = "Login or email"
-        login.delegate = self
+//        login.delegate = self
         login.translatesAutoresizingMaskIntoConstraints = false
         return login
     }()
@@ -97,7 +105,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         pass.returnKeyType = UIReturnKeyType.done
         pass.clearButtonMode = UITextField.ViewMode.whileEditing
         pass.contentVerticalAlignment = UIControl.ContentVerticalAlignment.center
-        pass.delegate = self
+//        pass.delegate = self
         pass.translatesAutoresizingMaskIntoConstraints = false
         pass.placeholder = "Password"
         return pass
@@ -109,7 +117,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         signInButton.setTitle("Sign In", for: .normal)
         signInButton.layer.cornerRadius = 10
         signInButton.translatesAutoresizingMaskIntoConstraints = false
-        signInButton.addTarget(self, action: #selector(signInButtonPressed), for: .touchUpInside)
+        signInButton.addTarget(self, action: #selector(signInRealm), for: .touchUpInside)
         return signInButton
     }()
     
@@ -119,7 +127,7 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         changeButton.setTitle("Sign Up", for: .normal)
         changeButton.layer.cornerRadius = 10
         changeButton.translatesAutoresizingMaskIntoConstraints = false
-        changeButton.addTarget(self, action: #selector(signUpButtonPressed), for: .touchUpInside)
+        changeButton.addTarget(self, action: #selector(signUpRealm), for: .touchUpInside)
         return changeButton
     }()
     
@@ -132,150 +140,148 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return errorLabel
     }()
     
-    @objc func signInButtonPressed() {
-            
-            let email = login.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-            let password = pass.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            
-            self.delegate?.checkCredentials(login: login.text!, password: pass.text!) { [weak self] result, error in
-                guard let strongSelf = self else {
-                    return
-                }
-                
-                guard error == nil else {
-                    self?.errorLabel.text = error!.localizedDescription
-                    self?.errorLabel.alpha = 1
-                    return
-                }
-                
+    private lazy var checkInLabel: UILabel = {
+        let checkInLabel = UILabel()
+        checkInLabel.text = "Пароль должен быть не меньше 4 символов"
+        checkInLabel.font = .boldSystemFont(ofSize: 15)
+        checkInLabel.textColor = .red
+        checkInLabel.isHidden = true
+        checkInLabel.numberOfLines = 0
+        return checkInLabel
+    }()
+    
+    func presentAlert(title: String? = nil, message: String? = nil, completion: (Callback)? = nil) {
+        let title = title ?? "Попробуйте снова!"
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            guard let completion = completion else { return }
+            completion()
+        }))
+        present(alert, animated: true)
+    }
+    
+    let authRealm = AuthRealm()
+    
+    @objc func signInRealm() {
+        
+        let authObjects = realm.objects(AuthRealm.self)
+        for authObject in authObjects {
+            let userName = authObject.userName
+            let password = authObject.password
+//            var isAuthorized = authObject.isUserAuthorized
+            if login.text ?? "" == userName && pass.text ?? "" == password {
+//                isAuthorized = true
+                    #if DEBUG
+                    let logInProfile = ProfileViewController(userService: CurrentUserService(name: login.text ?? "", avatar: "", status: "") as UserService, userName: login.text ?? "")
+                    navigationController?.pushViewController(logInProfile, animated: true)
+                    #else
+                    let logInProfile = ProfileViewController(userService: TestUserService(name: login.text ?? "", avatar: "", status: "") as UserService, userName: login.text ?? "")
+                    navigationController?.pushViewController(logInProfile, animated: true)
+                    #endif
+            } else {
+                checkInLabel.text = "Неправильный логин и/или пароль!"
+                checkInLabel.isHidden = false
+                    self.login.text = nil
+                    self.pass.text = nil
+            }
+        }
+    }
+    
+    func isAuthorized() {
+        let authObjects = realm.objects(AuthRealm.self)
+        for authObject in authObjects {
+            if authObject.userName != nil {
                 #if DEBUG
-                let logInProfile = ProfileViewController(userService: CurrentUserService(name: strongSelf.login.text!, avatar: "", status: "") as UserService, userName: strongSelf.login.text!)
-                strongSelf.navigationController?.pushViewController(logInProfile, animated: true)
+                let logInProfile = ProfileViewController(userService: CurrentUserService(name: login.text ?? "", avatar: "", status: "") as UserService, userName: login.text ?? "")
+                navigationController?.pushViewController(logInProfile, animated: true)
                 #else
-                let logInProfile = ProfileViewController(userService: TestUserService(name: strongSelf.login.text!, avatar: "", status: "") as UserService, userName: strongSelf.login.text!)
-                strongSelf.navigationController?.pushViewController(logInProfile, animated: true)
+                let logInProfile = ProfileViewController(userService: TestUserService(name: login.text ?? "", avatar: "", status: "") as UserService, userName: login.text ?? "")
+                navigationController?.pushViewController(logInProfile, animated: true)
                 #endif
-                
-                strongSelf.checkUserInfo()
-            }
-    }
-    
-    @objc func signUpButtonPressed() {
-        
-        let error = validateFields()
-        
-        if error != nil {
-            
-            showError(error!)
-        } else {
-            
-            
-            let checkedLogin = login.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            let checkedPassword = pass.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            self.delegate?.signUp(login: login.text!, password: pass.text!) { result, error in
-                
-                if error != nil {
-                    self.showError("Error: \(String(describing: error?.localizedDescription))")
-                } else {
-                    let newUserInfo = Auth.auth().currentUser
-                    let email = newUserInfo?.email
-                    self.errorLabel.text = "Регистрация прошла успешна!"
-                    self.errorLabel.alpha = 1
-                    self.errorLabel.textColor = .blue
-                }
+            } else {
+                print("Пользователь не авторизован. Авторизуйтесь!")
             }
         }
     }
     
-    private func checkUserInfo() {
-        if Auth.auth().currentUser != nil {
-            print(Auth.auth().currentUser?.uid)
-        }
+    @objc func signUpRealm() {
+        let authObjects = realm.objects(AuthRealm.self)
+        
+        authRealm.userName = login.text ?? ""
+        authRealm.password = pass.text ?? ""
+//        authRealm.isUserAuthorized = false
+        
+        presentAlert(title: "", message: "Регистрация прошла успешна!")
+        try! self.realm.write( {
+            self.realm.add(self.authRealm)
+        })
     }
-    
-    private func validateFields() -> String? {
-        
-        if login.text?.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
-            
-            return "Необходимо заполнить поля"
-        }
-        
-        let cleanedPassword = pass.text!.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if Utilities.isPasswordValid(cleanedPassword) == false {
-            return "Пароль должен содержать не менее 8 букв, специальные символы и числа."
-        }
-        
-        return nil
-    }
-    
-    private func setupElements() {
-        
-        errorLabel.alpha = 0
-    }
-    
-    private func showError(_ message: String) {
-        
-        errorLabel.text = message
-        errorLabel.alpha = 1
-    }
-    
+
     
     private func setupLayout() {
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        scrollView.addSubview(logo)
-        scrollView.addSubview(login)
-        scrollView.addSubview(pass)
-        scrollView.addSubview(signInButton)
-        scrollView.addSubview(signUpButton)
-        scrollView.addSubview(errorLabel)
+        contentView.addSubview(logo)
+        contentView.addSubview(login)
+        contentView.addSubview(pass)
+        contentView.addSubview(signInButton)
+        contentView.addSubview(signUpButton)
+        contentView.addSubview(checkInLabel)
         
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+        scrollView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
         
-            logo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 120.0),
-            logo.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            logo.widthAnchor.constraint(equalToConstant: 100.0),
-            logo.heightAnchor.constraint(equalToConstant: 100.0),
-            
-            login.topAnchor.constraint(equalTo: logo.topAnchor, constant: 120.0),
-            login.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
-            login.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0),
-            login.heightAnchor.constraint(equalToConstant: 50),
-            
-            pass.topAnchor.constraint(equalTo: login.bottomAnchor, constant: 0),
-            pass.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
-            pass.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0),
-            pass.heightAnchor.constraint(equalToConstant: 50),
-            
-            signInButton.topAnchor.constraint(equalTo: pass.bottomAnchor, constant: 16.0),
-            signInButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
-            signInButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0),
-            signInButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            signUpButton.topAnchor.constraint(equalTo: signInButton.bottomAnchor, constant: 16.0),
-            signUpButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
-            signUpButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0),
-            signUpButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            errorLabel.topAnchor.constraint(equalTo: signUpButton.bottomAnchor, constant: 16.0),
-            errorLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            errorLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16.0),
-            errorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16.0)
-        ])
+        contentView.snp.makeConstraints { (make) in
+            make.edges.equalTo(scrollView)
+            make.height.greaterThanOrEqualTo(scrollView)
+            make.width.equalTo(scrollView)
+        }
         
+        logo.snp.makeConstraints { (make) in
+            make.top.equalTo(contentView.snp.top).offset(120)
+            make.centerX.equalTo(contentView.snp.centerX)
+            make.width.equalTo(100)
+            make.height.equalTo(100)
+        }
+        
+        login.snp.makeConstraints { (make) in
+            make.top.equalTo(logo.snp.bottom).offset(16)
+            make.right.equalTo(contentView.snp.right).offset(-16)
+            make.left.equalTo(contentView.snp.left).offset(16)
+            make.height.equalTo(50)
+        }
+        
+        pass.snp.makeConstraints { (make) in
+            make.top.equalTo(login.snp.bottom)
+            make.left.equalTo(contentView.snp.left).offset(16)
+            make.right.equalTo(contentView.snp.right).offset(-16)
+            make.height.equalTo(50)
+        }
+        
+        signInButton.snp.makeConstraints { (make) in
+            make.top.equalTo(pass.snp.bottom).offset(16)
+            make.left.equalTo(contentView).offset(16)
+            make.right.equalTo(contentView).offset(-16)
+            make.height.equalTo(50)
+        }
+        
+        signUpButton.snp.makeConstraints { (make) in
+            make.top.equalTo(signInButton.snp.bottom).offset(16)
+            make.left.equalTo(contentView).offset(16)
+            make.right.equalTo(contentView).offset(-16)
+            make.height.equalTo(50)
+        }
+        
+        checkInLabel.snp.makeConstraints { (make) in
+            make.top.equalTo(signUpButton.snp.bottom).offset(16)
+            make.centerX.equalTo(contentView)
+            make.height.equalTo(30)
+        }
     }
 
     
@@ -288,8 +294,9 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         setupLayout()
         
-        setupElements()
-            
+        isAuthorized()
+        print(realm.configuration.fileURL)
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
