@@ -14,7 +14,7 @@ class PostViewController: UIViewController {
         
         view.backgroundColor = .systemMint
         let feedView = FeedViewController()
-        self.title = feedView.post.title
+//        self.title = feedView.post.title
         
         configureItems()
     }

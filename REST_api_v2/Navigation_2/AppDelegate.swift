@@ -9,6 +9,7 @@ import UIKit
 import Firebase
 import FirebaseCore
 import FirebaseAuth
+import CoreData
 
 
 @main
@@ -40,8 +41,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         profile.tabBarItem = profileItem
         let profileViewNavigationController = UINavigationController(rootViewController: profile)
         
+        let likedPostsItem = UITabBarItem()
+        likedPostsItem.title = "Посты"
+        likedPostsItem.image = UIImage(systemName: "person.fill")
+        let likedPosts = LikedPostsViewController()
+        likedPosts.title = "Избранные посты"
+        likedPosts.tabBarItem = likedPostsItem
+        let likedPostsViewNavigationController = UINavigationController(rootViewController: likedPosts)
+        
         let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [feedViewNavigationController, profileViewNavigationController]
+        tabBarController.viewControllers = [feedViewNavigationController, profileViewNavigationController, likedPostsViewNavigationController]
         tabBarController.selectedIndex = 0
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()

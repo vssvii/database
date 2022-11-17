@@ -59,9 +59,6 @@
 		4B500F0728578012007CCD21 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B500F0528578012007CCD21 /* Photo.swift */; };
 		4B500F0828578012007CCD21 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B500F0528578012007CCD21 /* Photo.swift */; };
 		4B500F0928578012007CCD21 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B500F0528578012007CCD21 /* Photo.swift */; };
-		4B500F0A28578012007CCD21 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B500F0628578012007CCD21 /* Post.swift */; };
-		4B500F0B28578012007CCD21 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B500F0628578012007CCD21 /* Post.swift */; };
-		4B500F0C28578012007CCD21 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B500F0628578012007CCD21 /* Post.swift */; };
 		4B500F1128578109007CCD21 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B500F0E28578109007CCD21 /* PhotosViewController.swift */; };
 		4B500F1428578109007CCD21 /* PhotosTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B500F0F28578109007CCD21 /* PhotosTableViewCell.swift */; };
 		4B500F1528578109007CCD21 /* PhotosTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B500F0F28578109007CCD21 /* PhotosTableViewCell.swift */; };
@@ -112,6 +109,10 @@
 		91A4AF8DCA1B08B2C5C09500 /* Pods_StorageService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AE7F84957A51259FC3843D /* Pods_StorageService.framework */; };
 		9528C68AA3A54C93D29391E4 /* Pods_Navigation_2_release.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C5A4648448C039168E8EB6E /* Pods_Navigation_2_release.framework */; };
 		B08D1166291CC7E900E33C02 /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08D1165291CC7E900E33C02 /* RealmModel.swift */; };
+		B0A60BB12923A312006F0CD1 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B0A60BAF2923A312006F0CD1 /* Model.xcdatamodeld */; };
+		B0A60BB32923AD22006F0CD1 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A60BB22923AD22006F0CD1 /* CoreDataManager.swift */; };
+		B0A60BB52923B9AD006F0CD1 /* LikedPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A60BB42923B9AD006F0CD1 /* LikedPostsViewController.swift */; };
+		B0A60BB729249831006F0CD1 /* LikedPostsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A60BB629249831006F0CD1 /* LikedPostsTableViewCell.swift */; };
 		B870E7BFA0E6DB5D2E8A3537 /* Pods_Navigation_2_release.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E43DC9722784840F947357A /* Pods_Navigation_2_release.framework */; };
 /* End PBXBuildFile section */
 
@@ -193,7 +194,6 @@
 		4B497B79280304D900AD19B6 /* StorageService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StorageService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B497B7B280304D900AD19B6 /* StorageService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageService.h; sourceTree = "<group>"; };
 		4B500F0528578012007CCD21 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
-		4B500F0628578012007CCD21 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		4B500F0E28578109007CCD21 /* PhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 1; path = PhotosViewController.swift; sourceTree = "<group>"; usesTabs = 0; };
 		4B500F0F28578109007CCD21 /* PhotosTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosTableViewCell.swift; sourceTree = "<group>"; };
 		4B500F1028578109007CCD21 /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -212,6 +212,10 @@
 		5F08FF723579815A8D635512 /* Pods-StorageService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StorageService.release.xcconfig"; path = "Target Support Files/Pods-StorageService/Pods-StorageService.release.xcconfig"; sourceTree = "<group>"; };
 		7BB0642124E395F4284F7F28 /* Pods_Navigation_2_release.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Navigation_2_release.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B08D1165291CC7E900E33C02 /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
+		B0A60BB02923A312006F0CD1 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		B0A60BB22923AD22006F0CD1 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		B0A60BB42923B9AD006F0CD1 /* LikedPostsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedPostsViewController.swift; sourceTree = "<group>"; };
+		B0A60BB629249831006F0CD1 /* LikedPostsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedPostsTableViewCell.swift; sourceTree = "<group>"; };
 		CAC46ACE01C4341DBE0CB886 /* Pods_Navigation_2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Navigation_2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -253,6 +257,7 @@
 		4B02DA452778C52300023AF4 = {
 			isa = PBXGroup;
 			children = (
+				B0A60BAE2923A2DB006F0CD1 /* DataBase */,
 				4B1163BC289842AB00CD2145 /* Utilities */,
 				4BBFBCD92886AA3E0067C74D /* Authentification */,
 				4BC472762880339800C89D0B /* Models_JSON */,
@@ -327,6 +332,8 @@
 				4B500F1028578109007CCD21 /* PhotosCollectionViewCell.swift */,
 				4B500F0F28578109007CCD21 /* PhotosTableViewCell.swift */,
 				4B500F0E28578109007CCD21 /* PhotosViewController.swift */,
+				B0A60BB42923B9AD006F0CD1 /* LikedPostsViewController.swift */,
+				B0A60BB629249831006F0CD1 /* LikedPostsTableViewCell.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -353,7 +360,6 @@
 			isa = PBXGroup;
 			children = (
 				4B500F0528578012007CCD21 /* Photo.swift */,
-				4B500F0628578012007CCD21 /* Post.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -394,6 +400,15 @@
 				4BC4728728812DF200C89D0B /* Planets.swift */,
 			);
 			path = Models_JSON;
+			sourceTree = "<group>";
+		};
+		B0A60BAE2923A2DB006F0CD1 /* DataBase */ = {
+			isa = PBXGroup;
+			children = (
+				B0A60BAF2923A312006F0CD1 /* Model.xcdatamodeld */,
+				B0A60BB22923AD22006F0CD1 /* CoreDataManager.swift */,
+			);
+			path = DataBase;
 			sourceTree = "<group>";
 		};
 		D86FE603E8742C73B3D97E4A /* Pods */ = {
@@ -695,16 +710,18 @@
 				4B02DA6A2778CB7900023AF4 /* ProfileViewController.swift in Sources */,
 				4B90B4C327C0189000AAB539 /* LogInViewController.swift in Sources */,
 				4B974038280F120E00987C6C /* PostViewController.swift in Sources */,
-				4B500F0A28578012007CCD21 /* Post.swift in Sources */,
 				4BBFBCDB2886AA9B0067C74D /* CheckerService.swift in Sources */,
+				B0A60BB52923B9AD006F0CD1 /* LikedPostsViewController.swift in Sources */,
 				4B2F12762797329A004AE7CE /* ProfileHeaderView.swift in Sources */,
 				4B974032280F120100987C6C /* AppDelegate.swift in Sources */,
+				B0A60BB32923AD22006F0CD1 /* CoreDataManager.swift in Sources */,
 				4B1CA6D72837F34400FED58C /* LoginViewControllerDelegate.swift in Sources */,
 				B08D1166291CC7E900E33C02 /* RealmModel.swift in Sources */,
 				4BC4727A2880375900C89D0B /* NetworkError.swift in Sources */,
 				4B500F1428578109007CCD21 /* PhotosTableViewCell.swift in Sources */,
 				4BC4727E288074FA00C89D0B /* InfoTableViewCell.swift in Sources */,
 				4B974036280F120B00987C6C /* FeedViewController.swift in Sources */,
+				B0A60BB12923A312006F0CD1 /* Model.xcdatamodeld in Sources */,
 				4B500F1128578109007CCD21 /* PhotosViewController.swift in Sources */,
 				4B1CA6D22837EC9400FED58C /* Checker.swift in Sources */,
 				4B381B482873FC6A0089FBC2 /* NetworkService.swift in Sources */,
@@ -715,6 +732,7 @@
 				4B339CE0282ADB46005686B6 /* User.swift in Sources */,
 				4BAA655A27DCD8DE003AA5E2 /* PostTableViewCell.swift in Sources */,
 				4B339CE8282ADED3005686B6 /* CurrentUserService.swift in Sources */,
+				B0A60BB729249831006F0CD1 /* LikedPostsTableViewCell.swift in Sources */,
 				4B1CA6DD2839712500FED58C /* LoginFactory.swift in Sources */,
 				4BC47278288033EE00C89D0B /* Users.swift in Sources */,
 			);
@@ -747,7 +765,6 @@
 				4B381B4D28740F850089FBC2 /* AppConfiguration.swift in Sources */,
 				4BC4727B2880406F00C89D0B /* NetworkError.swift in Sources */,
 				4B1CA6D82837F34400FED58C /* LoginViewControllerDelegate.swift in Sources */,
-				4B500F0B28578012007CCD21 /* Post.swift in Sources */,
 				4B339CE1282ADB46005686B6 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -763,7 +780,6 @@
 				4BC4727C2880406F00C89D0B /* NetworkError.swift in Sources */,
 				4B974039280F120F00987C6C /* PostViewController.swift in Sources */,
 				4BBFBCDD2886AA9B0067C74D /* CheckerService.swift in Sources */,
-				4B500F0C28578012007CCD21 /* Post.swift in Sources */,
 				4BC47280288079A900C89D0B /* InfoTableViewCell.swift in Sources */,
 				4B1CA6D92837F34400FED58C /* LoginViewControllerDelegate.swift in Sources */,
 				4B500F1628578109007CCD21 /* PhotosTableViewCell.swift in Sources */,
@@ -1234,6 +1250,19 @@
 			productName = iOSIntPackage;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		B0A60BAF2923A312006F0CD1 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B0A60BB02923A312006F0CD1 /* Model.xcdatamodel */,
+			);
+			currentVersion = B0A60BB02923A312006F0CD1 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4B02DA462778C52300023AF4 /* Project object */;
 }

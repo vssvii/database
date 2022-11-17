@@ -35,10 +35,10 @@ class FeedViewController: UIViewController {
         navigationController?.pushViewController(postViewController, animated: true)
     }
 
-    struct Post {
-    var title: String
-    }
+//    struct Post {
+//    var title: String
+//    }
     
-    var post = Post(title: "Пост")
+//    var post = Post(title: "Пост")
 }
 
