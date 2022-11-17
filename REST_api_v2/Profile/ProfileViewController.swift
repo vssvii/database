@@ -11,11 +11,13 @@ import SnapKit
 import Foundation
 import Firebase
 import FirebaseAuth
+import CoreData
 
 var factory = MyLoginFactory().getLoginInspector()
 
-
 class ProfileViewController: UIViewController {
+    
+    let coreManager = CoreDataManager.shared
     
     let userService: UserService?
     
@@ -37,8 +39,8 @@ class ProfileViewController: UIViewController {
         let author: String
         let description: String
         let image: UIImage?
-        let likes: Int
-        let views: Int
+        let likes: Int16
+        let views: Int16
     }
     
     var posts: [Post] = []
@@ -156,6 +158,25 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             cell.postView.image = posts[indexPath.row].image
           return cell
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 1 {
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(likedPost))
+            tapRecognizer.numberOfTapsRequired = 2
+            view.addGestureRecognizer(tapRecognizer)
+        }
+    }
+    
+    @objc func likedPost() {
+        let indexPath = IndexPath()
+        let post = posts[indexPath.row]
+        let imageData = post.image
+        let contactImage = imageData?.pngData()
+        coreManager.addNewPost(author: post.author, description: post.description, image: contactImage!, likes: post.likes, views: post.views)
+        
+        
+//        coreManager.addNewPost(post: post)
     }
     
     @objc func goToCollection() {

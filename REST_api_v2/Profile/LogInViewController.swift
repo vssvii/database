@@ -191,13 +191,9 @@ class LogInViewController: UIViewController {
         let authObjects = realm.objects(AuthRealm.self)
         for authObject in authObjects {
             if authObject.userName != nil {
-                #if DEBUG
                 let logInProfile = ProfileViewController(userService: CurrentUserService(name: login.text ?? "", avatar: "", status: "") as UserService, userName: login.text ?? "")
                 navigationController?.pushViewController(logInProfile, animated: true)
-                #else
-                let logInProfile = ProfileViewController(userService: TestUserService(name: login.text ?? "", avatar: "", status: "") as UserService, userName: login.text ?? "")
-                navigationController?.pushViewController(logInProfile, animated: true)
-                #endif
+                
             } else {
                 print("Пользователь не авторизован. Авторизуйтесь!")
             }
