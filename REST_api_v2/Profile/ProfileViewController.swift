@@ -186,6 +186,8 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
+    // Приложение крашиться при нажатии, прошу помочь. В чем может быть проблема? Правильно ли я передаю данные?
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
             let post = posts[indexPath.row]
