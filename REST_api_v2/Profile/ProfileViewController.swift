@@ -17,6 +17,8 @@ var factory = MyLoginFactory().getLoginInspector()
 
 class ProfileViewController: UIViewController {
     
+    private var actionHandler: (() -> Void)?
+    
     let coreManager = CoreDataManager.shared
     
     let userService: UserService?
@@ -39,8 +41,16 @@ class ProfileViewController: UIViewController {
         let author: String
         let description: String
         let image: UIImage?
+//        let image: String?
         let likes: Int16
         let views: Int16
+    }
+    
+    var singlePost: Post? {
+        didSet {
+            guard let pngImageData  = singlePost?.image?.pngData() else { return }
+            coreManager.addNewPost(author: singlePost?.author ?? "", description: singlePost?.description ?? "", image: pngImageData, likes: singlePost?.likes ?? 0, views: singlePost?.views ?? 0)
+        }
     }
     
     var posts: [Post] = []
@@ -65,6 +75,16 @@ class ProfileViewController: UIViewController {
         case photos
     }
     
+    @objc func likedPost() {
+//        let post = posts[indexPath.row]
+//        let imageData = post.image
+//        let contactImage = imageData?.pngData()
+//        coreManager.addNewPost(author: post.author, description: post.description, image: contactImage!, likes: post.likes, views: post.views)
+        
+        
+//        coreManager.addNewPost(post: post)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -73,6 +93,12 @@ class ProfileViewController: UIViewController {
         Post(author: "Elon Musk", description: "Waiting to launch global wi-fi", image: UIImage(named: "starlink"), likes: 400, views: 450),
         Post(author: "Мотивация. Спорт", description: "Программа по отжиманиям", image: UIImage(named: "pushups"), likes: 150, views: 180)
         ]
+        
+//                posts = [
+//                Post(author: "Димаш Кудайберген", description: "концерт в Москве", image: "dimash", likes: 150, views: 200),
+//                Post(author: "Elon Musk", description: "Waiting to launch global wi-fi", image: "starlink", likes: 400, views: 450),
+//                Post(author: "Мотивация. Спорт", description: "Программа по отжиманиям", image: "pushups", likes: 150, views: 180)
+//                ]
         
         photos = [
             Photo(image: UIImage(named: "1")),
@@ -162,22 +188,24 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 1 {
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(likedPost))
+            let post = posts[indexPath.row]
+            guard let pngImageData  = post.image?.pngData() else { return }
+            let tapRecognizer = TapGestureRecognizer(block: {
+                print("clicked!")
+                self.coreManager.addNewPost(author: post.author, description: post.description, image: pngImageData, likes: post.likes, views: post.views)
+            })
             tapRecognizer.numberOfTapsRequired = 2
             view.addGestureRecognizer(tapRecognizer)
         }
     }
     
-    @objc func likedPost() {
-        let indexPath = IndexPath()
-        let post = posts[indexPath.row]
-        let imageData = post.image
-        let contactImage = imageData?.pngData()
-        coreManager.addNewPost(author: post.author, description: post.description, image: contactImage!, likes: post.likes, views: post.views)
-        
-        
-//        coreManager.addNewPost(post: post)
-    }
+//    @objc func fetchPostData() {
+//        transferData(post: <#T##Post#>)
+//    }
+    
+//    func transferData(post: Post) {
+//        self.singlePost = post
+//    }
     
     @objc func goToCollection() {
         let photoCollection = PhotosViewController()
@@ -207,5 +235,29 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         } else {
             return 0
         }
+    }
+}
+            
+            
+
+class TapGestureRecognizer: UITapGestureRecognizer {
+    private var closure: (() -> ())?
+
+    init() {
+        super.init(target: TapGestureRecognizer.self, action: #selector(runAction))
+        self.removeTarget(TapGestureRecognizer.self, action: #selector(runAction))
+        self.addTarget(self, action: #selector(runAction))
+    }
+
+    convenience init(block: @escaping (() -> Void)) {
+        self.init()
+        closure = block
+//        view.addGestureRecognizer(self)
+    }
+
+    @objc func runAction() {
+        print("executed")
+        if closure == nil { return }
+        closure!()
     }
 }
