@@ -80,6 +80,8 @@ class ProfileViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -91,12 +93,6 @@ class ProfileViewController: UIViewController {
         Post(author: "Футбол", description: "Chelsea вышел в финал", image: UIImage(named: "chelsea"), likes: 400, views: 500),
         Post(author: "Путешествия", description: "Щвейцария", image: UIImage(named: "travel"), likes: 450, views: 500)
         ]
-        
-//                posts = [
-//                Post(author: "Димаш Кудайберген", description: "концерт в Москве", image: "dimash", likes: 150, views: 200),
-//                Post(author: "Elon Musk", description: "Waiting to launch global wi-fi", image: "starlink", likes: 400, views: 450),
-//                Post(author: "Мотивация. Спорт", description: "Программа по отжиманиям", image: "pushups", likes: 150, views: 180)
-//                ]
         
         photos = [
             Photo(image: UIImage(named: "1")),
@@ -192,6 +188,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
                     presentAlert(title: "", message: "Пост уже добавлен!")
                 } else {
                     self.coreManager.addNewPost(author: post.author, description: post.description)
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "newDataNotif"), object: nil)
                 }
             })
             tapRecognizer.numberOfTapsRequired = 2

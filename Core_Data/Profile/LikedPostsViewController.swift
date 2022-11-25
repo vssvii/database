@@ -15,6 +15,14 @@ class LikedPostsViewController: UIViewController {
     private enum CellReuseIdentifiers: String {
         case likedPosts
     }
+    
+    private lazy var likedPostsLabel: UILabel = {
+        let likedPostsLabel = UILabel()
+        likedPostsLabel.textColor = .blue
+        likedPostsLabel.text = "2-ое нажатие удаляет пост"
+        likedPostsLabel.font = UIFont.boldSystemFont(ofSize: 15)
+        return likedPostsLabel
+    }()
 
     
     private lazy var likedPostsTableView: UITableView = {
@@ -31,21 +39,23 @@ class LikedPostsViewController: UIViewController {
         setupView()
         
         navigationItems()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.refreshTableView), name: NSNotification.Name(rawValue: "newDataNotif"), object: nil)
     }
     
     private func navigationItems() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Обновить", style: .done, target: self, action: #selector(update))
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Удалить все", style: .plain, target: self, action: #selector(deleteAll))
-        navigationItem.leftBarButtonItem?.tintColor = .red
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Удалить все", style: .plain, target: self, action: #selector(deleteAll))
+        navigationItem.rightBarButtonItem?.tintColor = .red
     }
     
-    @objc func update() {
-        likedPostsTableView.reloadData()
+    @objc func refreshTableView() {
+        self.likedPostsTableView.reloadData()
     }
     
     @objc func deleteAll() {
         coreManager.deleteAll()
+        coreManager.posts = []
         likedPostsTableView.reloadData()
     }
     
@@ -53,10 +63,17 @@ class LikedPostsViewController: UIViewController {
         view.backgroundColor = .white
         title = "Любимые посты"
         
+        view.addSubview(likedPostsLabel)
         view.addSubview(likedPostsTableView)
         
+        likedPostsLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(120)
+            $0.centerX.equalToSuperview()
+        }
+        
         likedPostsTableView.snp.makeConstraints {
-            $0.top.left.right.bottom.equalToSuperview()
+            $0.left.right.bottom.equalToSuperview()
+            $0.top.equalTo(likedPostsLabel.snp.bottom).offset(16)
         }
     }
 }
@@ -64,11 +81,6 @@ class LikedPostsViewController: UIViewController {
 extension LikedPostsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-//        var count = 0
-//        if tableView == likedPostsTableView {
-//            count = 1
-//        }
-//        return count
         return 1
     }
     
@@ -109,18 +121,5 @@ extension LikedPostsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
-//        if indexPath.section == 0 {
-//                return 200
-//        } else {
-//            return UITableView.automaticDimension
-//        }
     }
-    
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        if section == 0 {
-//            return 420
-//        } else {
-//            return 0
-//        }
-//    }
 }
